@@ -14,7 +14,7 @@ def post_detail(request):  # retrieve
 
 
 def post_list(request):  # list items
-    return HttpResponse("<h1>List</h1>")
+    return render(request, 'index.html', {})
 
 
 def post_update(request):

@@ -5,10 +5,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote_plus
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
 
 # Create your views here.
 from .models import Post
 from .forms import PostForm
+from comments.models import Comment
 
 
 def post_create(request):
@@ -33,10 +35,15 @@ def post_detail(request, slug=None):  # retrieve
         if not request.user.is_staff or not request.user.is_superuser:
             raise Http404
     share_string = quote_plus(instance.content)
+    content_type = ContentType.objects.get_for_model(Post)
+    obj_id = instance.id
+    comments = Comment.objects.filter(content_type=content_type, object_id=obj_id)
+
     context = {
         'title': instance.title,
         'instance': instance,
         'share_string': share_string,
+        'comments': comments,
     }
     return render(request, 'post_detail.html', context)
 

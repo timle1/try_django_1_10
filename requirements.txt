@@ -2,3 +2,4 @@ Django>=1.10.*
 pillow
 django-pagedown
 django-markdown-deux
+django-crispy-forms

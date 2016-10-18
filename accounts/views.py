@@ -9,6 +9,7 @@ from .forms import UserLoginForm, UserRegisterForm
 
 
 def login_view(request):
+    next = request.GET.get('next')
     title = "Login"
     form = UserLoginForm(request.POST or None)
     if form.is_valid():
@@ -17,12 +18,15 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         login(request, user)
         print(request.user.is_authenticated())
+        if next:
+            return redirect(next)
         return redirect('/')
 
     return render(request, "accounts_form.html", {"form":form, "title": title})
 
 
 def register_view(request):
+    next = request.GET.get('next')
     title = "Register"
     form = UserRegisterForm(request.POST or None)
     if form.is_valid():
@@ -32,6 +36,8 @@ def register_view(request):
         user.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
+        if next:
+            return redirect(next)
         return redirect("/")
 
     context = {

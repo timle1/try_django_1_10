@@ -27,21 +27,41 @@ post_detail_url = HyperlinkedIdentityField(
 
 class PostDetailSerializer(ModelSerializer):
     url = post_detail_url
+    user = SerializerMethodField()
+    image = SerializerMethodField()
+    html = SerializerMethodField()
     class Meta:
         model = Post
         fields = [
             'url',
             'id',
+            'user',
             'title',
             'slug',
             'content',
-            'publish'
+            'html',
+            'publish',
+            'image',
         ]
+
+    def get_html(self, obj):
+        return obj.get_markdown()
+
+    def get_user(self, obj):
+        return str(obj.user.username)
+
+    def get_image(self, obj):
+        try:
+            image = obj.image.url
+        except:
+            image = None
+        return image
 
 
 
 class PostListSerializer(ModelSerializer):
     url = post_detail_url
+    user = SerializerMethodField()
     class Meta:
         model = Post
         fields = [
@@ -51,3 +71,54 @@ class PostListSerializer(ModelSerializer):
             'content',
             'publish',
         ]
+
+    def get_user(self, obj):
+        return str(obj.user.username)
+
+
+
+
+"""
+
+from posts.models import Post
+from posts.api.serializers import PostSerializer
+obj = Post.objects.first()
+print(obj)
+
+obj_data = PostSerializer(obj)
+obj_data.data
+
+data5 = {
+    "title": "Yeahh buddy",
+    "content": "New content",
+    "publish": "2016-2-12",
+    "slug": "yeah-buddy",
+
+}
+new_item = PostSerializer(data=data5)
+if new_item.is_valid():
+    new_item.save()
+else:
+    print(new_item.errors)
+
+
+#session2
+
+from posts.models import Post
+from posts.api.serializers import PostDetailSerializer
+data = {
+    "title": "Yeahh buddy",
+    "content": "New content",
+    "publish": "2016-2-12",
+    "slug": "yeah-buddy",
+
+}
+
+obj = Post.objects.get(id=2)
+new_item = PostDetailSerializer(obj, data=data)
+if new_item.is_valid():
+    new_item.save()
+else:
+    print(new_item.errors)
+
+"""

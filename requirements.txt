@@ -1,10 +1,9 @@
 Django>=1.10.*
-pillow
 django-pagedown
 django-markdown-deux
 django-crispy-forms
 markdown2
 Pillow
 djangorestframework
-markdown
+Markdown
 django-filter

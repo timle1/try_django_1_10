@@ -3,3 +3,8 @@ pillow
 django-pagedown
 django-markdown-deux
 django-crispy-forms
+markdown2
+Pillow
+djangorestframework
+markdown
+django-filter
